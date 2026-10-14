@@ -37,6 +37,7 @@ class HFDatasetLoader:
         token: str | None = None,
         cache_dir: str | None = None,
         max_rows: int | None = None,
+        streaming: bool = False,
         filename: str | Path | None = None,
         file_type: str | None = None,
     ) -> None:
@@ -46,6 +47,7 @@ class HFDatasetLoader:
         self.token = token
         self.cache_dir = cache_dir
         self.max_rows = max_rows
+        self.streaming = streaming
         self.filename = Path(filename) if filename is not None else None
         self.file_type = self._normalize_file_type(file_type)
         self.df: pd.DataFrame | None = None
@@ -65,7 +67,15 @@ class HFDatasetLoader:
             split=self.split,
             token=self.token,
             cache_dir=self.cache_dir,
+            streaming=self.streaming,
         )
+        if self.streaming:
+            if self.max_rows is None:
+                raise ValueError("max_rows es obligatorio cuando streaming=True.")
+            self.df = pd.DataFrame(dataset.take(self.max_rows))
+            if self.filename is not None:
+                self._save(self.df)
+            return self.df
         if self.max_rows is not None:
             dataset = dataset.select(range(min(self.max_rows, len(dataset))))
 
