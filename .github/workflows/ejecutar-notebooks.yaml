@@ -1,0 +1,112 @@
+name: Ejecutar notebooks
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ejecutar-notebooks-main
+  cancel-in-progress: false
+
+env:
+  # Un notebook por línea: etiqueta|notebook|carpetas generadas|reporte .txt
+  # Cada notebook se ejecuta desde su propia carpeta (usa rutas relativas).
+  # Para sumar una actividad nueva, agregar una línea.
+  NOTEBOOKS: |
+    EA1|EA1/notebooks/EA1_fake_news.ipynb|EA1/datos EA1/resultados|EA1/resultados/fake-news.txt
+    EA2|EA2/notebooks/EA2_bike_sharing.ipynb|EA2/resultados|EA2/resultados/resumen_dataframe.txt
+
+jobs:
+  ejecutar-notebooks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Crear entorno virtual
+        run: python -m venv .venv
+
+      - name: Instalar dependencias
+        run: |
+          source .venv/bin/activate
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install -r requirements.txt
+          .venv/bin/python -m pip install pyarrow openpyxl
+
+      - name: Limpiar resultados generados
+        run: |
+          while IFS='|' read -r etiqueta notebook carpetas reporte; do
+            [ -z "$etiqueta" ] && continue
+            IFS=' ' read -r -a lista_carpetas <<< "$carpetas"
+            for carpeta in "${lista_carpetas[@]}"; do
+              mkdir -p "$carpeta"
+              find "$carpeta" -mindepth 1 -delete
+            done
+          done <<< "$NOTEBOOKS"
+
+      - name: Ejecutar notebooks
+        run: |
+          source .venv/bin/activate
+          while IFS='|' read -r etiqueta notebook carpetas reporte; do
+            [ -z "$etiqueta" ] && continue
+            echo "::group::${etiqueta} (${notebook})"
+            (
+              cd "$(dirname "$notebook")"
+              jupyter nbconvert \
+                --to notebook \
+                --execute \
+                --inplace \
+                --ExecutePreprocessor.timeout=1800 \
+                "$(basename "$notebook")"
+            )
+            echo "::endgroup::"
+          done <<< "$NOTEBOOKS"
+
+      - name: Confirmar cambios generados
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          RESUMEN=""
+          while IFS='|' read -r etiqueta notebook carpetas reporte; do
+            [ -z "$etiqueta" ] && continue
+            IFS=' ' read -r -a lista_carpetas <<< "$carpetas"
+            git add "$notebook" "${lista_carpetas[@]}"
+            FILAS=$(grep -m 1 '^Filas:' "$reporte" || echo "Filas: ?")
+            COLUMNAS=$(grep -m 1 '^Columnas:' "$reporte" || echo "Columnas: ?")
+            RESUMEN="${RESUMEN}- ${etiqueta}: ${FILAS} | ${COLUMNAS}"$'\n'
+          done <<< "$NOTEBOOKS"
+
+          if git diff --cached --quiet; then
+            echo "No se generaron cambios."
+            exit 0
+          fi
+
+          # Identificar el commit que disparó la ejecución.
+          # En un merge de PR se usa el título del PR (primera línea del cuerpo).
+          ORIGEN=$(git rev-parse --short "$GITHUB_SHA")
+          if git rev-parse -q --verify "${GITHUB_SHA}^2" > /dev/null; then
+            TITULO=$(git log -1 --format=%b "$GITHUB_SHA" | head -n 1)
+          else
+            TITULO=$(git log -1 --format=%s "$GITHUB_SHA")
+          fi
+
+          git commit \
+            -m "chore: regenerar resultados de los notebooks tras ${ORIGEN} [skip ci]" \
+            -m "Disparado por: ${TITULO}" \
+            -m "Reportes:"$'\n'"${RESUMEN%$'\n'}"
+          git push origin HEAD:main

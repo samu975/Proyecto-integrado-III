@@ -21,6 +21,8 @@ class HFDatasetLoader:
         token: Token de Hugging Face para datasets privados.
         cache_dir: Directorio de caché de Hugging Face.
         max_rows: Cantidad máxima de filas a cargar.
+        revision: Commit, rama o etiqueta del repositorio del dataset. Sirve
+            para fijar una versión y que la carga sea reproducible.
         filename: Ruta opcional donde se guardará el DataFrame.
         file_type: Formato opcional de salida: ``csv``, ``json``, ``parquet``
             o ``xlsx``. Si no se indica, se infiere desde la extensión de
@@ -40,6 +42,7 @@ class HFDatasetLoader:
         streaming: bool = False,
         filename: str | Path | None = None,
         file_type: str | None = None,
+        revision: str | None = None,
     ) -> None:
         self.dataset_name = dataset_name
         self.config = config
@@ -48,6 +51,7 @@ class HFDatasetLoader:
         self.cache_dir = cache_dir
         self.max_rows = max_rows
         self.streaming = streaming
+        self.revision = revision
         self.filename = Path(filename) if filename is not None else None
         self.file_type = self._normalize_file_type(file_type)
         self.df: pd.DataFrame | None = None
@@ -68,6 +72,7 @@ class HFDatasetLoader:
             token=self.token,
             cache_dir=self.cache_dir,
             streaming=self.streaming,
+            revision=self.revision,
         )
         if self.streaming:
             if self.max_rows is None:
@@ -92,6 +97,7 @@ class HFDatasetLoader:
             "dataset": self.dataset_name,
             "config": self.config,
             "split": self.split,
+            "revision": self.revision,
             "filas": len(self.df),
             "columnas": len(self.df.columns),
         }

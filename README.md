@@ -33,7 +33,8 @@ EA1/
 ├── notebooks/EA1_fake_news.ipynb # Notebook que orquesta el flujo
 ├── datos/fake-news.csv           # Datos crudos descargados (generado)
 └── resultados/fake-news.txt      # Resumen del DataFrame transformado (generado)
-.github/workflows/                # Bot que ejecuta el notebook en cada push a main
+EA2/                              # Entrega EA2 (ver sección EA2)
+.github/workflows/                # Bot que ejecuta los notebooks en cada push a main
 Dockerfile, docker-compose.yml
 ```
 
@@ -86,7 +87,80 @@ El `.txt` se genera a partir del DataFrame **transformado** (9.872 filas, 4 colu
 | Transformaciones del DataFrame | 5 transformaciones en `EA1/notebooks/EA1_fake_news.ipynb` |
 | Funcionamiento y evidencias | Notebook guardado con salidas + ejecución automática en GitHub Actions |
 
-## Cómo ejecutarlo
+## EA2 – Ideación, diseño y documentación de la necesidad
+
+**Propósito:** definir una necesidad analítica, elegir un dataset de Hugging Face que
+la apoye, cargarlo en un DataFrame, revisarlo de forma descriptiva y generar un
+resumen `.txt` automáticamente. En esta entrega **no se transforma** el dataset.
+
+**Necesidad (escenario hipotético):** el equipo de operaciones de un sistema público
+de bicicletas compartidas necesita entender cómo varía la demanda por hora para
+planificar la redistribución de bicicletas y el mantenimiento.
+
+**Pregunta descriptiva:** ¿Cómo varía la cantidad de alquileres por hora según la
+franja horaria, el tipo de día, la estación y las condiciones del clima, y qué
+diferencias hay entre usuarios casuales y registrados durante 2011 y 2012?
+
+**Unidad de análisis:** una fila = una hora de servicio del sistema.
+
+### Dataset
+
+| Dato | Valor |
+|---|---|
+| Nombre | Bike Sharing Demand - Hourly (Poisson), copia del UCI Bike Sharing Dataset (archivo por hora) |
+| Identificador en Hugging Face | [`t22000t/bike-sharing-tabular`](https://huggingface.co/datasets/t22000t/bike-sharing-tabular) |
+| Split | `train` |
+| Revisión (commit) | `6b645e0cedbc5208fcca11ac94544b088478bf61` |
+| Tamaño | 17.379 filas x 17 columnas (carga completa) |
+| Fuente original | [UCI Bike Sharing Dataset (id 275)](https://archive.ics.uci.edu/dataset/275/bike+sharing+dataset), Fanaee-T y Gama |
+| Licencia | CC BY 4.0 |
+| Fecha de consulta | 2026-10-25 |
+
+### Estructura de `EA2/`
+
+La guía sugiere una carpeta `AE2/`; acá se llama `EA2/` (evidencia de aprendizaje),
+igual que `EA1/`.
+
+```
+EA2/
+├── documento/                       # Documento Word de la entrega
+├── notebooks/EA2_bike_sharing.ipynb # Notebook (el bot lo guarda con salidas)
+└── resultados/resumen_dataframe.txt # Resumen generado por el notebook (lo sube el bot)
+```
+
+El notebook usa `HFDatasetLoader` (con el nuevo parámetro opcional `revision`, que
+fija la versión del dataset) y `Reportes` (con el nuevo parámetro opcional
+`encabezado`, que agrega dataset, split, revisión y muestra al resumen). Sin esos
+parámetros el comportamiento es el mismo que en EA1.
+
+### Cómo ejecutar el notebook de EA2
+
+Con Docker (recomendado), sin abrir el navegador:
+
+```bash
+docker compose build
+docker compose run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp \
+  -w /app/EA2/notebooks notebook \
+  jupyter nbconvert --to notebook --execute --inplace EA2_bike_sharing.ipynb
+```
+
+O con `docker compose up --build` y abriendo `EA2/notebooks/EA2_bike_sharing.ipynb`
+en `http://localhost:8888`.
+
+Sin Docker (Python 3.12):
+
+```bash
+python -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -r requirements.txt pyarrow openpyxl
+cd EA2/notebooks
+jupyter notebook EA2_bike_sharing.ipynb
+```
+
+Cada ejecución crea la carpeta `EA2/resultados/` si falta y regenera
+`resumen_dataframe.txt`.
+
+## Cómo ejecutarlo (EA1)
 
 ### Con Docker (recomendado)
 
@@ -123,17 +197,25 @@ jupyter notebook EA1_fake_news.ipynb
 
 ## Ejecución automática (GitHub Actions)
 
-El workflow `.github/workflows/ejecutar-ea1.yaml` corre en cada push a `main`:
+El workflow `.github/workflows/ejecutar-notebooks.yaml` corre en cada push a `main`
+y procesa todos los notebooks de la lista `NOTEBOOKS` (hoy EA1 y EA2):
 
 1. Instala las dependencias en una máquina limpia.
-2. Borra `EA1/datos/` y `EA1/resultados/` para regenerarlos desde cero.
-3. Ejecuta el notebook completo.
-4. Commitea el CSV, el reporte y el notebook con sus salidas como
-   `github-actions[bot]`. El mensaje lleva `[skip ci]` para no volver a dispararse.
+2. Borra las carpetas de resultados (`EA1/datos/`, `EA1/resultados/`,
+   `EA2/resultados/`) para regenerarlas desde cero.
+3. Ejecuta cada notebook completo desde su carpeta.
+4. Commitea los notebooks con sus salidas y los archivos generados como
+   `github-actions[bot]`. El mensaje indica qué commit lo disparó y resume cada
+   reporte, y lleva `[skip ci]` para no volver a dispararse.
 
-Así, los resultados del repositorio siempre corresponden al código de `main`.
-Si los datos no cambian, el commit del bot solo actualiza los tiempos de ejecución
-que el notebook guarda en cada celda.
+Así, los resultados del repositorio siempre corresponden al código de `main`. Por
+eso **los archivos generados no se suben a mano**: en los PR se sube solo el código
+y el notebook, y el bot genera el resto al integrar.
+
+Para sumar una actividad nueva basta con agregar una línea a `NOTEBOOKS` con el
+notebook, sus carpetas de resultados y su reporte `.txt`. Si los datos no cambian, el
+commit del bot solo actualiza los tiempos de ejecución que cada notebook guarda en
+sus celdas.
 
 ## Convenciones del equipo
 

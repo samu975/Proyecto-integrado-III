@@ -9,13 +9,25 @@ import pandas as pd
 class Reportes:
     """Imprime y guarda un resumen legible de un DataFrame."""
 
-    def generar_reporte(self, df: pd.DataFrame) -> str:
-        """Genera el contenido textual del reporte."""
+    def generar_reporte(
+        self,
+        df: pd.DataFrame,
+        encabezado: dict[str, object] | None = None,
+    ) -> str:
+        """Genera el contenido textual del reporte.
+
+        Args:
+            df: DataFrame a resumir.
+            encabezado: Datos opcionales (por ejemplo dataset, split o
+                revisión) que se imprimen como líneas ``clave: valor`` justo
+                después del título y antes de ``Filas``.
+        """
         self._validar_dataframe(df)
         numericas = df.select_dtypes(include="number")
         lineas = [
             "REPORTE DEL DATAFRAME",
             "=" * 60,
+            *[f"{clave}: {valor}" for clave, valor in (encabezado or {}).items()],
             f"Filas: {len(df)}",
             f"Columnas: {len(df.columns)}",
             f"Duplicados: {int(df.duplicated().sum())}",
@@ -36,15 +48,24 @@ class Reportes:
 
         return "\n".join(lineas) + "\n"
 
-    def imprimir_reporte(self, df: pd.DataFrame) -> None:
+    def imprimir_reporte(
+        self,
+        df: pd.DataFrame,
+        encabezado: dict[str, object] | None = None,
+    ) -> None:
         """Imprime en la consola el reporte del DataFrame."""
-        print(self.generar_reporte(df), end="")
+        print(self.generar_reporte(df, encabezado), end="")
 
-    def guardar_reporte(self, df: pd.DataFrame, ruta: str | Path) -> Path:
+    def guardar_reporte(
+        self,
+        df: pd.DataFrame,
+        ruta: str | Path,
+        encabezado: dict[str, object] | None = None,
+    ) -> Path:
         """Guarda el reporte en un archivo de texto y devuelve su ruta."""
         path = Path(ruta)
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(self.generar_reporte(df), encoding="utf-8")
+        path.write_text(self.generar_reporte(df, encabezado), encoding="utf-8")
         return path
 
     @staticmethod
