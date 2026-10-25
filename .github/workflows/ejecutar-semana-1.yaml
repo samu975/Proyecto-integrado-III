@@ -67,5 +67,21 @@ jobs:
             exit 0
           fi
 
-          git commit -m "chore: actualizar resultados de Semana 1 [skip ci]"
+          # Identificar el commit que disparó la ejecución.
+          # En un merge de PR se usa el título del PR (primera línea del cuerpo).
+          ORIGEN=$(git rev-parse --short "$GITHUB_SHA")
+          if git rev-parse -q --verify "${GITHUB_SHA}^2" > /dev/null; then
+            TITULO=$(git log -1 --format=%b "$GITHUB_SHA" | head -n 1)
+          else
+            TITULO=$(git log -1 --format=%s "$GITHUB_SHA")
+          fi
+
+          REPORTE=src/sincronicas/reportes/fake-news.txt
+          FILAS=$(grep -m 1 '^Filas:' "$REPORTE" || echo "Filas: ?")
+          COLUMNAS=$(grep -m 1 '^Columnas:' "$REPORTE" || echo "Columnas: ?")
+
+          git commit \
+            -m "chore: regenerar resultados de Semana 1 tras ${ORIGEN} [skip ci]" \
+            -m "Disparado por: ${TITULO}" \
+            -m "Reporte: ${FILAS} | ${COLUMNAS}"
           git push origin HEAD:main
