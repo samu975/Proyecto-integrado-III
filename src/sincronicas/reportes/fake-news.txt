@@ -1,0 +1,13 @@
+REPORTE DEL DATAFRAME
+============================================================
+Filas: 60000
+Columnas: 2
+Duplicados: 2154
+
+Columnas y tipos:
+- text: object
+- label: object
+
+Valores nulos por columna:
+- text: 0
+- label: 0
