@@ -1,13 +1,28 @@
 REPORTE DEL DATAFRAME
 ============================================================
-Filas: 60000
-Columnas: 2
-Duplicados: 2154
+Filas: 9872
+Columnas: 4
+Duplicados: 0
 
 Columnas y tipos:
-- text: object
-- label: object
+- texto: object
+- etiqueta: object
+- cantidad_palabras: int64
+- es_falsa: int64
 
 Valores nulos por columna:
-- text: 0
-- label: 0
+- texto: 0
+- etiqueta: 0
+- cantidad_palabras: 0
+- es_falsa: 0
+
+Estadísticas numéricas:
+       cantidad_palabras  es_falsa
+count           9872.000  9872.000
+mean             176.868     0.402
+std              302.061     0.490
+min                5.000     0.000
+25%               12.000     0.000
+50%               17.000     0.000
+75%              307.000     1.000
+max             7033.000     1.000
