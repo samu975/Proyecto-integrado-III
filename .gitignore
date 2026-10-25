@@ -118,7 +118,7 @@ ipython_config.py
 .pdm-python
 .pdm-build/
 
-# src/sincronicas/datos/ y src/sincronicas/reportes/ NO se ignoran:
+# EA1/datos/ y EA1/resultados/ NO se ignoran:
 # el workflow de GitHub Actions los genera y los commitea.
 
 # pixi

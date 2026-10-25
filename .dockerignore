@@ -2,5 +2,5 @@
 .venv
 venv
 __pycache__
-src/sincronicas/datos
-src/sincronicas/reportes
+EA1/datos
+EA1/resultados
