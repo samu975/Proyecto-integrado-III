@@ -15,7 +15,7 @@ Se trabaja con el dataset [`fauxNeuz/RealFakeNews`](https://huggingface.co/datas
 ### Flujo
 
 ```
-HFDatasetLoader ──► DataFrame ──► 5 transformaciones ──► Reportes ──► reportes/fake-news.txt
+HFDatasetLoader ──► DataFrame ──► 5 transformaciones ──► Reportes ──► EA1/resultados/fake-news.txt
  (clase de carga)                  (en el notebook)      (clase de resumen)
 ```
 
@@ -26,14 +26,14 @@ lógica de carga y de generación del resumen.
 
 ```
 src/
-├── clases_po/
-│   ├── hf_loader.py          # HFDatasetLoader: Hugging Face -> DataFrame
-│   └── reportes.py           # Reportes: DataFrame -> resumen .txt
-└── sincronicas/
-    ├── Semana_1SINC.ipynb    # Notebook que orquesta el flujo
-    ├── datos/fake-news.csv     # Datos crudos descargados (generado)
-    └── reportes/fake-news.txt  # Resumen del DataFrame transformado (generado)
-.github/workflows/            # Bot que ejecuta el notebook en cada push a main
+└── clases_po/                    # Código compartido entre evidencias
+    ├── hf_loader.py              # HFDatasetLoader: Hugging Face -> DataFrame
+    └── reportes.py               # Reportes: DataFrame -> resumen .txt
+EA1/
+├── notebooks/EA1_fake_news.ipynb # Notebook que orquesta el flujo
+├── datos/fake-news.csv           # Datos crudos descargados (generado)
+└── resultados/fake-news.txt      # Resumen del DataFrame transformado (generado)
+.github/workflows/                # Bot que ejecuta el notebook en cada push a main
 Dockerfile, docker-compose.yml
 ```
 
@@ -50,7 +50,7 @@ loader = HFDatasetLoader(
     split="train",
     max_rows=10_000,
     streaming=True,
-    filename="datos/fake-news.csv",
+    filename="../datos/fake-news.csv",
 )
 df = loader.load()
 ```
@@ -61,7 +61,7 @@ columnas numéricas.
 
 ```python
 reportes = Reportes()
-reportes.guardar_reporte(df_transformado, "reportes/fake-news.txt")
+reportes.guardar_reporte(df_transformado, "../resultados/fake-news.txt")
 ```
 
 ### Transformaciones (en el notebook)
@@ -82,8 +82,8 @@ El `.txt` se genera a partir del DataFrame **transformado** (9.872 filas, 4 colu
 |---|---|
 | Código versionado en GitHub | Historial de commits y PRs de este repositorio |
 | Clase para generar un DataFrame | `src/clases_po/hf_loader.py` |
-| Clase para resumir y exportar | `src/clases_po/reportes.py` + `src/sincronicas/reportes/fake-news.txt` |
-| Transformaciones del DataFrame | 5 transformaciones en `Semana_1SINC.ipynb` |
+| Clase para resumir y exportar | `src/clases_po/reportes.py` + `EA1/resultados/fake-news.txt` |
+| Transformaciones del DataFrame | 5 transformaciones en `EA1/notebooks/EA1_fake_news.ipynb` |
 | Funcionamiento y evidencias | Notebook guardado con salidas + ejecución automática en GitHub Actions |
 
 ## Cómo ejecutarlo
@@ -97,14 +97,14 @@ docker compose up --build
 ```
 
 Entrar a `http://localhost:8888` con el token que aparece en la consola y abrir
-`src/sincronicas/Semana_1SINC.ipynb`.
+`EA1/notebooks/EA1_fake_news.ipynb`.
 
 Ejecutar el notebook completo sin abrir el navegador:
 
 ```bash
 docker compose run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp \
-  -w /app/src/sincronicas notebook \
-  jupyter nbconvert --to notebook --execute --inplace Semana_1SINC.ipynb
+  -w /app/EA1/notebooks notebook \
+  jupyter nbconvert --to notebook --execute --inplace EA1_fake_news.ipynb
 ```
 
 `--user` evita que los archivos generados queden a nombre de `root`.
@@ -117,16 +117,16 @@ Requiere Python 3.12.
 python -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt pyarrow openpyxl
-cd src/sincronicas
-jupyter notebook Semana_1SINC.ipynb
+cd EA1/notebooks
+jupyter notebook EA1_fake_news.ipynb
 ```
 
 ## Ejecución automática (GitHub Actions)
 
-El workflow `.github/workflows/ejecutar-semana-1.yaml` corre en cada push a `main`:
+El workflow `.github/workflows/ejecutar-ea1.yaml` corre en cada push a `main`:
 
 1. Instala las dependencias en una máquina limpia.
-2. Borra `datos/` y `reportes/` para regenerarlos desde cero.
+2. Borra `EA1/datos/` y `EA1/resultados/` para regenerarlos desde cero.
 3. Ejecuta el notebook completo.
 4. Commitea el CSV, el reporte y el notebook con sus salidas como
    `github-actions[bot]`. El mensaje lleva `[skip ci]` para no volver a dispararse.

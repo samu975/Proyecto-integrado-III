@@ -1,4 +1,4 @@
-name: Ejecutar Semana 1
+name: Ejecutar EA1
 
 on:
   push:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: ejecutar-semana-1-main
+  group: ejecutar-ea1-main
   cancel-in-progress: false
 
 jobs:
@@ -39,14 +39,14 @@ jobs:
           .venv/bin/python -m pip install -r requirements.txt
           .venv/bin/python -m pip install pyarrow openpyxl
 
-      - name: Limpiar datos y reportes generados
+      - name: Limpiar datos y resultados generados
         run: |
-          mkdir -p src/sincronicas/datos src/sincronicas/reportes
-          find src/sincronicas/datos -mindepth 1 -delete
-          find src/sincronicas/reportes -mindepth 1 -delete
+          mkdir -p EA1/datos EA1/resultados
+          find EA1/datos -mindepth 1 -delete
+          find EA1/resultados -mindepth 1 -delete
 
-      - name: Ejecutar Semana_1SINC.ipynb
-        working-directory: src/sincronicas
+      - name: Ejecutar EA1_fake_news.ipynb
+        working-directory: EA1/notebooks
         run: |
           source ../../.venv/bin/activate
           jupyter nbconvert \
@@ -54,13 +54,13 @@ jobs:
             --execute \
             --inplace \
             --ExecutePreprocessor.timeout=1800 \
-            Semana_1SINC.ipynb
+            EA1_fake_news.ipynb
 
       - name: Confirmar cambios generados
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/sincronicas/datos src/sincronicas/reportes src/sincronicas/Semana_1SINC.ipynb
+          git add EA1/datos EA1/resultados EA1/notebooks/EA1_fake_news.ipynb
 
           if git diff --cached --quiet; then
             echo "No se generaron cambios."
@@ -76,12 +76,12 @@ jobs:
             TITULO=$(git log -1 --format=%s "$GITHUB_SHA")
           fi
 
-          REPORTE=src/sincronicas/reportes/fake-news.txt
+          REPORTE=EA1/resultados/fake-news.txt
           FILAS=$(grep -m 1 '^Filas:' "$REPORTE" || echo "Filas: ?")
           COLUMNAS=$(grep -m 1 '^Columnas:' "$REPORTE" || echo "Columnas: ?")
 
           git commit \
-            -m "chore: regenerar resultados de Semana 1 tras ${ORIGEN} [skip ci]" \
+            -m "chore: regenerar resultados de la EA1 tras ${ORIGEN} [skip ci]" \
             -m "Disparado por: ${TITULO}" \
             -m "Reporte: ${FILAS} | ${COLUMNAS}"
           git push origin HEAD:main
