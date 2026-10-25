@@ -1,0 +1,6 @@
+.git
+.venv
+venv
+__pycache__
+src/sincronicas/datos
+src/sincronicas/reportes
