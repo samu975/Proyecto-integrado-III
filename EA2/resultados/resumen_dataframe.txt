@@ -1,0 +1,59 @@
+REPORTE DEL DATAFRAME
+============================================================
+Dataset: t22000t/bike-sharing-tabular
+Configuración: por defecto (sin configuración)
+Split: train
+Revisión: 6b645e0cedbc5208fcca11ac94544b088478bf61
+Muestra: no, dataset completo (17.379 filas)
+Filas: 17379
+Columnas: 17
+Duplicados: 0
+
+Columnas y tipos:
+- instant: int64
+- dteday: object
+- season: int64
+- yr: int64
+- mnth: int64
+- hr: int64
+- holiday: int64
+- weekday: int64
+- workingday: int64
+- weathersit: int64
+- temp: float64
+- atemp: float64
+- hum: float64
+- windspeed: float64
+- casual: int64
+- registered: int64
+- cnt: int64
+
+Valores nulos por columna:
+- instant: 0
+- dteday: 0
+- season: 0
+- yr: 0
+- mnth: 0
+- hr: 0
+- holiday: 0
+- weekday: 0
+- workingday: 0
+- weathersit: 0
+- temp: 0
+- atemp: 0
+- hum: 0
+- windspeed: 0
+- casual: 0
+- registered: 0
+- cnt: 0
+
+Estadísticas numéricas:
+         instant     season         yr       mnth         hr    holiday    weekday  workingday  weathersit       temp      atemp        hum  windspeed     casual  registered        cnt
+count  17379.000  17379.000  17379.000  17379.000  17379.000  17379.000  17379.000   17379.000   17379.000  17379.000  17379.000  17379.000  17379.000  17379.000   17379.000  17379.000
+mean    8690.000      2.502      0.503      6.538     11.547      0.029      3.004       0.683       1.425      0.497      0.476      0.627      0.190     35.676     153.787    189.463
+std     5017.029      1.107      0.500      3.439      6.914      0.167      2.006       0.465       0.639      0.193      0.172      0.193      0.122     49.305     151.357    181.388
+min        1.000      1.000      0.000      1.000      0.000      0.000      0.000       0.000       1.000      0.020      0.000      0.000      0.000      0.000       0.000      1.000
+25%     4345.500      2.000      0.000      4.000      6.000      0.000      1.000       0.000       1.000      0.340      0.333      0.480      0.104      4.000      34.000     40.000
+50%     8690.000      3.000      1.000      7.000     12.000      0.000      3.000       1.000       1.000      0.500      0.485      0.630      0.194     17.000     115.000    142.000
+75%    13034.500      3.000      1.000     10.000     18.000      0.000      5.000       1.000       2.000      0.660      0.621      0.780      0.254     48.000     220.000    281.000
+max    17379.000      4.000      1.000     12.000     23.000      1.000      6.000       1.000       4.000      1.000      1.000      1.000      0.851    367.000     886.000    977.000
