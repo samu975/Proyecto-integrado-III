@@ -118,9 +118,8 @@ ipython_config.py
 .pdm-python
 .pdm-build/
 
-# Datos y reportes generados durante la ejecución del notebook.
-src/sincronicas/datos/
-src/sincronicas/reportes/
+# src/sincronicas/datos/ y src/sincronicas/reportes/ NO se ignoran:
+# el workflow de GitHub Actions los genera y los commitea.
 
 # pixi
 #   Similar to Pipfile.lock, it is generally recommended to include pixi.lock in version control.
