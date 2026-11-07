@@ -53,7 +53,7 @@ RENOMBRAR_FINAL = {
 }
 COLUMNAS_FINALES = [
     "instant", "fecha", "fecha_hora", "anio", "mes", "nombre_mes", "dia_semana", "hora",
-    "franja_horaria", "tipo_dia", "estacion", "clima", "temp_c", "sensacion_c", "rango_temperatura",
+    "franja_horaria", "tipo_dia", "nombre_festivo", "tipo_festivo", "estacion", "clima", "temp_c", "sensacion_c", "rango_temperatura",
     "humedad_pct", "viento_original", "usuarios_casuales", "usuarios_registrados",
     "alquileres_total", "pct_casual",
 ]
@@ -195,7 +195,7 @@ class TransformacionBike:
     # ------------------------------------------------------------------ selección
     @staticmethod
     def seleccionar_columnas(df: pd.DataFrame) -> pd.DataFrame:
-        """Conserva las columnas pertinentes y renombra las originales que se mantienen."""
+        """Conserva las columnas pertinentes (incluidas las de festivos) y renombra las originales que se mantienen."""
         s = df.rename(columns=RENOMBRAR_FINAL)
         return s[COLUMNAS_FINALES].copy()
 
