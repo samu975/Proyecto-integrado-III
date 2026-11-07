@@ -1,0 +1,114 @@
+{
+  "metadatos": {
+    "modelo": "nvidia/nemotron-3-ultra-550b-a55b",
+    "fecha_generacion": "2026-11-07T19:54:40+00:00",
+    "prompt": "Contexto: dataset de bicicletas compartidas (Capital Bikeshare, Washington D.C., 2011-2012). Las siguientes fechas están marcadas como día festivo. Son fechas OBSERVADAS: si el festivo cae en fin de semana, se observa el viernes o el lunes más cercano.\n\nFechas:\n- 2011-01-17 (lunes)\n- 2011-02-21 (lunes)\n- 2011-04-15 (viernes)\n- 2011-05-30 (lunes)\n- 2011-07-04 (lunes)\n- 2011-09-05 (lunes)\n- 2011-10-10 (lunes)\n- 2011-11-11 (viernes)\n- 2011-11-24 (jueves)\n- 2011-12-26 (lunes)\n- 2012-01-02 (lunes)\n- 2012-01-16 (lunes)\n- 2012-02-20 (lunes)\n- 2012-04-16 (lunes)\n- 2012-05-28 (lunes)\n- 2012-07-04 (miércoles)\n- 2012-09-03 (lunes)\n- 2012-10-08 (lunes)\n- 2012-11-12 (lunes)\n- 2012-11-22 (jueves)\n- 2012-12-25 (martes)\n\nTarea: para CADA fecha indicá qué festivo es y si es federal de EE. UU. o local de Washington D.C. No agregues ni omitas fechas.\nValores permitidos de nombre_festivo (usá exactamente uno):\n- Acción de Gracias\n- Año Nuevo\n- Cumpleaños de Washington\n- Día de Colón\n- Día de Martin Luther King Jr.\n- Día de la Emancipación de D.C.\n- Día de la Independencia\n- Día de los Caídos\n- Día de los Veteranos\n- Día del Trabajo\n- Navidad\nValores permitidos de tipo_festivo: \"Federal\" o \"Local (D.C.)\".\n\nRespondé solo con un arreglo JSON de objetos con las claves \"fecha\" (AAAA-MM-DD), \"nombre_festivo\" y \"tipo_festivo\"."
+  },
+  "festivos": [
+    {
+      "fecha": "2011-01-17",
+      "nombre_festivo": "Día de Martin Luther King Jr.",
+      "tipo_festivo": "Federal"
+    },
+    {
+      "fecha": "2011-02-21",
+      "nombre_festivo": "Cumpleaños de Washington",
+      "tipo_festivo": "Federal"
+    },
+    {
+      "fecha": "2011-04-15",
+      "nombre_festivo": "Día de la Emancipación de D.C.",
+      "tipo_festivo": "Local (D.C.)"
+    },
+    {
+      "fecha": "2011-05-30",
+      "nombre_festivo": "Día de los Caídos",
+      "tipo_festivo": "Federal"
+    },
+    {
+      "fecha": "2011-07-04",
+      "nombre_festivo": "Día de la Independencia",
+      "tipo_festivo": "Federal"
+    },
+    {
+      "fecha": "2011-09-05",
+      "nombre_festivo": "Día del Trabajo",
+      "tipo_festivo": "Federal"
+    },
+    {
+      "fecha": "2011-10-10",
+      "nombre_festivo": "Día de Colón",
+      "tipo_festivo": "Federal"
+    },
+    {
+      "fecha": "2011-11-11",
+      "nombre_festivo": "Día de los Veteranos",
+      "tipo_festivo": "Federal"
+    },
+    {
+      "fecha": "2011-11-24",
+      "nombre_festivo": "Acción de Gracias",
+      "tipo_festivo": "Federal"
+    },
+    {
+      "fecha": "2011-12-26",
+      "nombre_festivo": "Navidad",
+      "tipo_festivo": "Federal"
+    },
+    {
+      "fecha": "2012-01-02",
+      "nombre_festivo": "Año Nuevo",
+      "tipo_festivo": "Federal"
+    },
+    {
+      "fecha": "2012-01-16",
+      "nombre_festivo": "Día de Martin Luther King Jr.",
+      "tipo_festivo": "Federal"
+    },
+    {
+      "fecha": "2012-02-20",
+      "nombre_festivo": "Cumpleaños de Washington",
+      "tipo_festivo": "Federal"
+    },
+    {
+      "fecha": "2012-04-16",
+      "nombre_festivo": "Día de la Emancipación de D.C.",
+      "tipo_festivo": "Local (D.C.)"
+    },
+    {
+      "fecha": "2012-05-28",
+      "nombre_festivo": "Día de los Caídos",
+      "tipo_festivo": "Federal"
+    },
+    {
+      "fecha": "2012-07-04",
+      "nombre_festivo": "Día de la Independencia",
+      "tipo_festivo": "Federal"
+    },
+    {
+      "fecha": "2012-09-03",
+      "nombre_festivo": "Día del Trabajo",
+      "tipo_festivo": "Federal"
+    },
+    {
+      "fecha": "2012-10-08",
+      "nombre_festivo": "Día de Colón",
+      "tipo_festivo": "Federal"
+    },
+    {
+      "fecha": "2012-11-12",
+      "nombre_festivo": "Día de los Veteranos",
+      "tipo_festivo": "Federal"
+    },
+    {
+      "fecha": "2012-11-22",
+      "nombre_festivo": "Acción de Gracias",
+      "tipo_festivo": "Federal"
+    },
+    {
+      "fecha": "2012-12-25",
+      "nombre_festivo": "Navidad",
+      "tipo_festivo": "Federal"
+    }
+  ]
+}

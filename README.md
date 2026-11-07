@@ -160,6 +160,143 @@ jupyter notebook EA2_bike_sharing.ipynb
 Cada ejecución crea la carpeta `EA2/resultados/` si falta y regenera
 `resumen_dataframe.txt`.
 
+## AE3 – Transformación y enriquecimiento de datos
+
+**Propósito:** partir del dataset de la EA2, **transformarlo y validarlo por código**,
+**enriquecerlo** (variables derivadas y festivos clasificados con el LLM NVIDIA
+Nemotron), responder una tabla por pregunta y **exportar automáticamente** el dataset
+preparado, las tablas y un `.txt` descriptivo del DataFrame final.
+
+**Dataset:** el mismo de la EA2 (`t22000t/bike-sharing-tabular`, split `train`, revisión
+`6b645e0cedbc5208fcca11ac94544b088478bf61`; copia del
+[UCI Bike Sharing Dataset, id 275](https://archive.ics.uci.edu/dataset/275/bike+sharing+dataset)
+de Fanaee-T y Gama, licencia **CC BY 4.0**, por lo que se puede publicar citando la
+fuente). Los datos se publican en el repositorio con esa atribución.
+
+### Preguntas abordadas
+
+La pregunta única de la EA2 se descompone en seis subpreguntas (una tabla cada una):
+
+| Pregunta | Tablas (`AE3/resultados/tablas/`) |
+|---|---|
+| P1. ¿En qué horas y franjas se concentra la demanda? | `P1_demanda_por_franja_horaria.csv`, `P1_demanda_por_hora_del_dia.csv` |
+| P2. ¿Cómo cambia la demanda según el tipo de día? | `P2_demanda_por_tipo_de_dia.csv`, `P2_demanda_por_tipo_de_dia_y_franja.csv`, `P2_demanda_por_festivo.csv` |
+| P3. ¿Cómo varía entre estaciones y meses? | `P3_demanda_por_estacion.csv`, `P3_demanda_por_mes.csv` |
+| P4. ¿Cómo se relaciona con el clima? | `P4_demanda_por_situacion_climatica.csv`, `P4_demanda_por_rango_de_temperatura.csv` |
+| P5. ¿En qué se diferencian casuales y registrados? | `P5_participacion_casuales_y_registrados.csv` |
+| P6. ¿Cuánto cambió la demanda entre 2011 y 2012? | `P6_variacion_2011_2012.csv` |
+
+### Transformaciones
+
+Todas están en la clase `TransformacionBike` y se explican paso a paso en el notebook,
+con la cantidad de registros afectados:
+
+- `dteday` (texto) pasa a `fecha` (datetime) y se crea `fecha_hora`.
+- **20 controles de calidad**, informados aunque den 0: nulos, duplicados (fila completa,
+  `instant`, fecha y hora), `cnt = casual + registered`, hora en 0-23, día de la semana,
+  año y mes coherentes con la fecha, `workingday` coherente, rangos de las variables
+  normalizadas, conteos negativos, `cnt = 0`, humedad 0 y viento 0.
+- **Horas faltantes del calendario** (165 de 17.544): se muestran por fecha y **no se
+  imputan** (no se sabe si son horas sin alquileres o sin registro; imputar sesgaría
+  los promedios).
+- Decodificación de `season`, `weathersit`, `weekday`, `yr`, `holiday` y `workingday` a
+  etiquetas en español como **categorías ordenadas**.
+- Clima a unidades originales: `temp_c`, `sensacion_c`, `humedad_pct` y
+  `viento_original` (la unidad del viento **no está documentada** por UCI).
+- Selección de columnas: 17 columnas originales → 23 en el DataFrame final, sin
+  eliminar filas. Tabla *antes y después* (filas, columnas, tipos y nulos) en el notebook.
+
+### Enriquecimientos
+
+**Derivados** (`franja_horaria`, `tipo_dia`, `rango_temperatura`, `nombre_mes`,
+`pct_casual`): fórmula, significado y utilidad en la tabla *Variables incorporadas* del
+notebook. Las franjas se definieron mirando el perfil horario (picos a las 8 h y a las
+17-18 h).
+
+**Con un LLM (NVIDIA Nemotron):** el dataset marca `holiday = 1` pero no dice qué festivo
+es. `EnriquecedorFestivos` agrega `nombre_festivo` y `tipo_festivo` (federal o local de
+D.C.) a las 21 fechas festivas, sin inventar filas ni demanda:
+
+1. Si existe `AE3/llm/festivos_nemotron.json`, **se carga y no se llama al LLM**.
+2. Si no existe y hay `NVIDIA_API_KEY`, se llama a Nemotron, se valida la respuesta y se
+   guarda el archivo (con modelo, fecha de generación y prompt).
+3. Si no existe y no hay clave (o el LLM falla), se usa el **catálogo de respaldo** de
+   feriados federales de la [OPM](https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/)
+   (fechas observadas) más el Día de la Emancipación de D.C.; **no** se escribe el
+   archivo del LLM, y el notebook muestra `FUENTE DE LOS FESTIVOS: RESPALDO`.
+
+Validaciones: las fechas del LLM deben coincidir exactamente con las `holiday = 1`; se
+compara el nombre del LLM con el catálogo OPM fecha a fecha; se cruza el catálogo OPM con
+las fechas del dataset (hoy coinciden las 21); y la unión por fecha comprueba que no cambie
+el número de filas ni la suma de alquileres.
+
+#### Configurar `NVIDIA_API_KEY` y regenerar el archivo del LLM
+
+La clave **nunca** se escribe en el código ni en el repositorio.
+
+- **Local:** `export NVIDIA_API_KEY="nvapi-..."` en la terminal antes de ejecutar. Con
+  Docker, pasarla con `-e NVIDIA_API_KEY` (sin valor, toma la de la terminal):
+  `docker compose run --rm -e NVIDIA_API_KEY ...`.
+- **GitHub (opcional):** crear el secret `NVIDIA_API_KEY` en *Settings → Secrets and
+  variables → Actions*. El workflow lo pasa al paso de ejecución; si no existe, se usa el
+  archivo versionado o el respaldo.
+- **Regenerar el archivo:** borrar `AE3/llm/festivos_nemotron.json`, ejecutar el notebook
+  con la clave configurada y versionar el archivo nuevo. Mientras exista, no se vuelve a
+  llamar al LLM.
+
+### Estructura de `AE3/`
+
+```
+AE3/
+├── notebooks/AE3_bike_sharing.ipynb          # Notebook ejecutado (con salidas)
+├── datos/bike_sharing_preparado.csv          # Dataset preparado (DataFrame final)
+├── resultados/
+│   ├── tablas/P1_....csv ... P6_....csv      # Una o más tablas por pregunta
+│   └── resumen_dataframe_final.txt           # Descripción del DataFrame final
+└── llm/festivos_nemotron.json                # Respuesta versionada del LLM (caché)
+```
+
+`datos/` y `resultados/` los regenera el notebook (y el bot de GitHub Actions). `llm/` no
+se borra nunca: es la caché versionada.
+
+### Clases usadas (`src/clases_po/`)
+
+| Archivo | Clase | Para qué |
+|---|---|---|
+| `hf_loader.py` | `HFDatasetLoader` | Carga del dataset con revisión fija |
+| `transformacion_bike.py` | `TransformacionBike` | Tipos, controles, decodificación, desnormalización, enriquecimiento y comparación antes/después |
+| `llm_nvidia.py` | `LLMNvidia` | Cliente del LLM de NVIDIA (adaptado de la clase del profesor) |
+| `festivos.py` | `EnriquecedorFestivos` | Clasificación de festivos con caché JSON, catálogo OPM y unión verificada |
+| `reportes.py` | `Reportes` | Genera el `.txt` del DataFrame final |
+
+Dependencias nuevas: `openai` (cliente compatible con el API de NVIDIA), en
+`requirements.txt`.
+
+### Cómo ejecutar el notebook de la AE3
+
+Con Docker (recomendado), sin abrir el navegador:
+
+```bash
+docker compose build
+docker compose run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp \
+  -w /app/AE3/notebooks notebook \
+  jupyter nbconvert --to notebook --execute --inplace AE3_bike_sharing.ipynb
+```
+
+Sin Docker (Python 3.12):
+
+```bash
+python -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -r requirements.txt pyarrow openpyxl
+cd AE3/notebooks
+jupyter notebook AE3_bike_sharing.ipynb
+```
+
+Cada ejecución regenera `AE3/datos/`, `AE3/resultados/tablas/` y
+`AE3/resultados/resumen_dataframe_final.txt`, y al final **vuelve a leer cada archivo y
+comprueba** que coincide con lo que hay en memoria (totales y porcentajes incluidos).
+
 ## Cómo ejecutarlo (EA1)
 
 ### Con Docker (recomendado)
@@ -198,11 +335,12 @@ jupyter notebook EA1_fake_news.ipynb
 ## Ejecución automática (GitHub Actions)
 
 El workflow `.github/workflows/ejecutar-notebooks.yaml` corre en cada push a `main`
-y procesa todos los notebooks de la lista `NOTEBOOKS` (hoy EA1 y EA2):
+y procesa todos los notebooks de la lista `NOTEBOOKS` (hoy EA1, EA2 y AE3):
 
 1. Instala las dependencias en una máquina limpia.
 2. Borra las carpetas de resultados (`EA1/datos/`, `EA1/resultados/`,
-   `EA2/resultados/`) para regenerarlas desde cero.
+   `EA2/resultados/`, `AE3/datos/`, `AE3/resultados/`) para regenerarlas desde cero.
+   `AE3/llm/` **no** se borra: guarda la respuesta versionada del LLM.
 3. Ejecuta cada notebook completo desde su carpeta.
 4. Commitea los notebooks con sus salidas y los archivos generados como
    `github-actions[bot]`. El mensaje indica qué commit lo disparó y resume cada

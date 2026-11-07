@@ -1,0 +1,5 @@
+estacion,horas_observadas,total_alquileres,promedio_alquileres_por_hora,mediana_alquileres_por_hora,pct_del_total_alquileres
+Invierno,4242,471348,111.11,76.0,14.32
+Primavera,4409,918589,208.34,165.0,27.9
+Verano,4496,1061129,236.02,199.0,32.23
+Otoño,4232,841613,198.87,155.5,25.56

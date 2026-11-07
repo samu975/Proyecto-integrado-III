@@ -1,0 +1,13 @@
+mes,nombre_mes,horas_observadas,total_alquileres,promedio_alquileres_por_hora,mediana_alquileres_por_hora,pct_del_total_alquileres
+1,Enero,1429,134933,94.42,66.0,4.1
+2,Febrero,1341,151352,112.87,82.0,4.6
+3,Marzo,1473,228920,155.41,104.0,6.95
+4,Abril,1437,269094,187.26,136.0,8.17
+5,Mayo,1488,331686,222.91,188.5,10.07
+6,Junio,1440,346342,240.52,203.0,10.52
+7,Julio,1488,344948,231.82,202.0,10.48
+8,Agosto,1475,351194,238.1,204.0,10.67
+9,Septiembre,1437,345991,240.77,190.0,10.51
+10,Octubre,1451,322352,222.16,174.0,9.79
+11,Noviembre,1437,254831,177.34,145.0,7.74
+12,Diciembre,1483,211036,142.3,106.0,6.41

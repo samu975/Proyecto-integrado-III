@@ -1,0 +1,12 @@
+nombre_festivo,tipo_festivo,fechas,horas_observadas,total_alquileres,promedio_alquileres_por_hora,pct_casuales
+Día de la Independencia,Federal,2,48,13446,280.12,41.85
+Día de Colón,Federal,2,48,10595,220.73,22.54
+Día de los Caídos,Federal,2,48,10141,211.27,40.49
+Día de los Veteranos,Federal,2,48,9637,200.77,15.95
+Día de la Emancipación de D.C.,Local (D.C.),2,48,9496,197.83,19.38
+Día del Trabajo,Federal,2,48,9385,195.52,34.11
+Cumpleaños de Washington,Federal,2,47,4236,90.13,16.45
+Año Nuevo,Federal,1,23,1951,84.83,12.51
+Acción de Gracias,Federal,2,48,3920,81.67,38.65
+Día de Martin Luther King Jr.,Federal,2,48,3298,68.71,10.13
+Navidad,Federal,2,46,2330,50.65,37.34

@@ -1,0 +1,5 @@
+clima,horas_observadas,total_alquileres,promedio_alquileres_por_hora,mediana_alquileres_por_hora,pct_del_total_alquileres
+Despejado o pocas nubes,11413,2338173,204.87,159.0,71.01
+Niebla con nubes,4544,795952,175.17,133.0,24.17
+Lluvia o nieve ligera,1419,158331,111.58,63.0,4.81
+"Lluvia fuerte, tormenta o nieve con niebla",3,223,74.33,36.0,0.01

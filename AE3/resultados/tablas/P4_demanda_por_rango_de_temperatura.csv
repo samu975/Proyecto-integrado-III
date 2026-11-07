@@ -1,0 +1,5 @@
+rango_temperatura,horas_observadas,total_alquileres,promedio_alquileres_por_hora,mediana_alquileres_por_hora,pct_del_total_alquileres
+Frío (< 10 °C),5813,626084,107.7,71.0,19.01
+Fresco (10 a < 20 °C),5056,949036,187.7,148.0,28.82
+Templado (20 a < 30 °C),5801,1486229,256.2,220.0,45.14
+Caluroso (≥ 30 °C),709,231330,326.28,295.0,7.03
