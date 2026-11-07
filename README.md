@@ -6,6 +6,12 @@ que se reutilizará en las siguientes actividades.
 
 **Integrantes:** Braian Rico · Samuel Rosero · Diego Cuervo
 
+**Entregas:**
+
+- [EA1 – Carga y creación del dataset](#ea1--carga-y-creación-del-dataset)
+- [EA2 – Ideación, diseño y documentación de la necesidad](#ea2--ideación-diseño-y-documentación-de-la-necesidad)
+- [AE3 / EA3 – Transformación y enriquecimiento de datos](#ae3--transformación-y-enriquecimiento-de-datos)
+
 ## EA1 – Carga y creación del dataset
 
 Se trabaja con el dataset [`fauxNeuz/RealFakeNews`](https://huggingface.co/datasets/fauxNeuz/RealFakeNews)
@@ -248,6 +254,9 @@ La clave **nunca** se escribe en el código ni en el repositorio.
 
 ```
 AE3/
+├── documento/                                # Documento de la entrega (EA3)
+│   ├── EA3-proyecto-integrador-III.docx
+│   └── EA3-proyecto-integrador-III.pdf
 ├── notebooks/AE3_bike_sharing.ipynb          # Notebook ejecutado (con salidas)
 ├── datos/bike_sharing_preparado.csv          # Dataset preparado (DataFrame final)
 ├── resultados/
@@ -255,6 +264,8 @@ AE3/
 │   └── resumen_dataframe_final.txt           # Descripción del DataFrame final
 └── llm/festivos_nemotron.json                # Respuesta versionada del LLM (caché)
 ```
+
+El trabajo escrito de la entrega está en `AE3/documento/` (Word y PDF).
 
 `datos/` y `resultados/` los regenera el notebook (y el bot de GitHub Actions). `llm/` no
 se borra nunca: es la caché versionada.
