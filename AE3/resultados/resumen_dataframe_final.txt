@@ -5,7 +5,7 @@ Split: train
 Revisión: 6b645e0cedbc5208fcca11ac94544b088478bf61
 DataFrame descrito: FINAL, transformado y enriquecido (el mismo que se exporta a CSV)
 Filas del dataset original: 17.379
-Fuente de nombre_festivo y tipo_festivo: respaldo (catálogo de respaldo OPM (no hay NVIDIA_API_KEY); NO se escribió festivos_nemotron.json)
+Fuente de nombre_festivo y tipo_festivo: LLM (llamada nueva a nvidia/nemotron-3-ultra-550b-a55b; resultado guardado en festivos_nemotron.json)
 Archivo del dataset preparado: ../datos/bike_sharing_preparado.csv
 Filas: 17379
 Columnas: 23
