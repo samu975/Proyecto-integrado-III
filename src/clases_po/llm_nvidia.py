@@ -67,7 +67,10 @@ class LLMNvidia:
             print(f"LLM desactivado: {motivo}")
 
     def __repr__(self) -> str:
-        estado = "activo" if self.activo else "inactivo (se usará el respaldo)"
+        estado = (
+            "activo" if self.activo
+            else "sin conexión al LLM: se usará el archivo guardado o, si no existe, el respaldo"
+        )
         return f"LLMNvidia(modelo='{self.modelo}', pensar={self.pensar}, estado={estado})"
 
     # ------------------------------------------------------------------ llamadas
