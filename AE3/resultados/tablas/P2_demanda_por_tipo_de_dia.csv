@@ -1,0 +1,4 @@
+tipo_dia,horas_observadas,total_alquileres,promedio_alquileres_por_hora,mediana_alquileres_por_hora,pct_del_total_alquileres
+Laboral,11865,2292410,193.21,151.0,69.62
+Fin de semana,5014,921834,183.85,122.0,28.0
+Festivo,500,78435,156.87,97.0,2.38

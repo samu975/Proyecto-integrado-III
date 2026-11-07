@@ -1,0 +1,6 @@
+franja_horaria,horas_observadas,total_alquileres,promedio_alquileres_por_hora,mediana_alquileres_por_hora,pct_del_total_alquileres
+Madrugada (0-5 h),4276,106509,24.91,13.0,3.23
+Pico de la mañana (6-9 h),2906,629742,216.7,169.0,19.13
+Mediodía (10-15 h),4369,1005711,230.19,202.0,30.54
+Pico de la tarde (16-19 h),2916,1101169,377.63,361.0,33.44
+Noche (20-23 h),2912,449548,154.38,136.0,13.65

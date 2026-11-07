@@ -1,0 +1,17 @@
+dimension,categoria,usuarios_casuales,usuarios_registrados,alquileres_total,pct_casuales,pct_registrados
+Tipo de día,Laboral,303285,1989125,2292410,13.23,86.77
+Tipo de día,Fin de semana,294373,627461,921834,31.93,68.07
+Tipo de día,Festivo,22359,56076,78435,28.51,71.49
+Franja horaria,Madrugada (0-5 h),19275,87234,106509,18.1,81.9
+Franja horaria,Pico de la mañana (6-9 h),49273,580469,629742,7.82,92.18
+Franja horaria,Mediodía (10-15 h),289201,716510,1005711,28.76,71.24
+Franja horaria,Pico de la tarde (16-19 h),188055,913114,1101169,17.08,82.92
+Franja horaria,Noche (20-23 h),74213,375335,449548,16.51,83.49
+Estación,Invierno,60622,410726,471348,12.86,87.14
+Estación,Primavera,203522,715067,918589,22.16,77.84
+Estación,Verano,226091,835038,1061129,21.31,78.69
+Estación,Otoño,129782,711831,841613,15.42,84.58
+Tipo de festivo,Federal,20519,48420,68939,29.76,70.24
+Tipo de festivo,Local (D.C.),1840,7656,9496,19.38,80.62
+Tipo de festivo,No festivo,597658,2616586,3214244,18.59,81.41
+Total,Todo el período,620017,2672662,3292679,18.83,81.17

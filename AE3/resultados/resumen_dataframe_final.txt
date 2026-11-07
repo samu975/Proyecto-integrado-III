@@ -1,0 +1,73 @@
+REPORTE DEL DATAFRAME
+============================================================
+Dataset: t22000t/bike-sharing-tabular
+Split: train
+Revisión: 6b645e0cedbc5208fcca11ac94544b088478bf61
+DataFrame descrito: FINAL, transformado y enriquecido (el mismo que se exporta a CSV)
+Filas del dataset original: 17.379
+Fuente de nombre_festivo y tipo_festivo: respaldo (catálogo de respaldo OPM (no hay NVIDIA_API_KEY); NO se escribió festivos_nemotron.json)
+Archivo del dataset preparado: ../datos/bike_sharing_preparado.csv
+Filas: 17379
+Columnas: 23
+Duplicados: 0
+
+Columnas y tipos:
+- instant: int64
+- fecha: datetime64[ns]
+- fecha_hora: datetime64[ns]
+- anio: int64
+- mes: int64
+- nombre_mes: category
+- dia_semana: category
+- hora: int64
+- franja_horaria: category
+- tipo_dia: category
+- nombre_festivo: object
+- tipo_festivo: object
+- estacion: category
+- clima: category
+- temp_c: float64
+- sensacion_c: float64
+- rango_temperatura: category
+- humedad_pct: float64
+- viento_original: float64
+- usuarios_casuales: int64
+- usuarios_registrados: int64
+- alquileres_total: int64
+- pct_casual: float64
+
+Valores nulos por columna:
+- instant: 0
+- fecha: 0
+- fecha_hora: 0
+- anio: 0
+- mes: 0
+- nombre_mes: 0
+- dia_semana: 0
+- hora: 0
+- franja_horaria: 0
+- tipo_dia: 0
+- nombre_festivo: 0
+- tipo_festivo: 0
+- estacion: 0
+- clima: 0
+- temp_c: 0
+- sensacion_c: 0
+- rango_temperatura: 0
+- humedad_pct: 0
+- viento_original: 0
+- usuarios_casuales: 0
+- usuarios_registrados: 0
+- alquileres_total: 0
+- pct_casual: 0
+
+Estadísticas numéricas:
+         instant       anio        mes       hora     temp_c  sensacion_c  humedad_pct  viento_original  usuarios_casuales  usuarios_registrados  alquileres_total  pct_casual
+count  17379.000  17379.000  17379.000  17379.000  17379.000    17379.000    17379.000        17379.000          17379.000             17379.000         17379.000   17379.000
+mean    8690.000   2011.503      6.538     11.547     15.358       15.401       62.723           12.736             35.676               153.787           189.463      17.214
+std     5017.029      0.500      3.439      6.914      9.050       11.342       19.293            8.197             49.305               151.357           181.388      13.656
+min        1.000   2011.000      1.000      0.000     -7.060      -16.000        0.000            0.000              0.000                 0.000             1.000       0.000
+25%     4345.500   2011.000      4.000      6.000      7.980        6.000       48.000            7.000              4.000                34.000            40.000       6.350
+50%     8690.000   2012.000      7.000     12.000     15.500       16.000       63.000           13.000             17.000               115.000           142.000      14.690
+75%    13034.500   2012.000     10.000     18.000     23.020       25.000       78.000           17.000             48.000               220.000           281.000      25.370
+max    17379.000   2012.000     12.000     23.000     39.000       50.000      100.000           57.000            367.000               886.000           977.000     100.000
