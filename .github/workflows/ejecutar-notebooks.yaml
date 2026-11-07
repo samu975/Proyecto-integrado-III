@@ -16,9 +16,12 @@ env:
   # Un notebook por línea: etiqueta|notebook|carpetas generadas|reporte .txt
   # Cada notebook se ejecuta desde su propia carpeta (usa rutas relativas).
   # Para sumar una actividad nueva, agregar una línea.
+  # AE3/llm (respuesta versionada del LLM) NO está en las carpetas generadas a propósito:
+  # el paso de limpieza no debe borrarla.
   NOTEBOOKS: |
     EA1|EA1/notebooks/EA1_fake_news.ipynb|EA1/datos EA1/resultados|EA1/resultados/fake-news.txt
     EA2|EA2/notebooks/EA2_bike_sharing.ipynb|EA2/resultados|EA2/resultados/resumen_dataframe.txt
+    AE3|AE3/notebooks/AE3_bike_sharing.ipynb|AE3/datos AE3/resultados|AE3/resultados/resumen_dataframe_final.txt
 
 jobs:
   ejecutar-notebooks:
@@ -59,6 +62,10 @@ jobs:
           done <<< "$NOTEBOOKS"
 
       - name: Ejecutar notebooks
+        env:
+          # Opcional: si el secret no existe queda vacío y AE3 usa el archivo versionado
+          # AE3/llm/festivos_nemotron.json o, en su defecto, el catálogo de respaldo.
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
         run: |
           source .venv/bin/activate
           while IFS='|' read -r etiqueta notebook carpetas reporte; do
