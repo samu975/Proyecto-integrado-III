@@ -5,3 +5,5 @@ notebook==7.2.3
 #ipykernel==6.29.5
 datasets
 openai>=1.40,<3
+streamlit>=1.50
+plotly>=5.24
