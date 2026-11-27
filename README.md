@@ -319,7 +319,14 @@ datos (ninguna cifra de los textos está escrita a mano).
 **Qué se mide:** alquileres (demanda). El dataset no tiene precios ni costos, así que la app no
 habla de ingresos ni de rentabilidad. Todo es descriptivo: asociaciones, no causas.
 
-**Enlace de la app:** (pendiente de despliegue)
+**Enlace de la app:** <https://bikesharing-pi3-ea4.streamlit.app/>
+
+**Documento final (PDF):** [`AE4/documento/EA4-proyecto-integrador-III.pdf`](AE4/documento/EA4-proyecto-integrador-III.pdf)
+(documento completo del proyecto, coherente con la app; las figuras son capturas de la app sin
+filtros, guardadas en `AE4/documento/capturas/`).
+
+> Si la app lleva varios días sin visitas, Streamlit Cloud la suspende: al abrirla aparece el
+> botón *"Yes, get this app back up!"* y tarda unos segundos en volver.
 
 ### Qué muestra la app
 
@@ -346,6 +353,9 @@ AE4/
 ├── app/
 │   ├── app.py                    # Punto de entrada de Streamlit
 │   └── requirements.txt          # Dependencias de la app (para Streamlit Community Cloud)
+├── documento/
+│   ├── EA4-proyecto-integrador-III.pdf   # Documento final del proyecto
+│   └── capturas/                 # Capturas de la app usadas como figuras del documento
 ├── notebooks/AE4_metricas_visualizacion.ipynb   # Verifica las 11 tablas y el dashboard contra AE3
 └── resultados/resumen_ae4.txt    # Reporte generado por el notebook (lo sube el bot)
 .streamlit/config.toml            # Tema claro de la app
@@ -412,6 +422,7 @@ usa la app) y también en el `requirements.txt` de la raíz (que usan Docker y e
 | Branch | `main` |
 | Main file path | `AE4/app/app.py` |
 | Python | 3.12 |
+| URL | <https://bikesharing-pi3-ea4.streamlit.app/> |
 
 Streamlit Cloud instala `AE4/app/requirements.txt` (el archivo junto al *main file*). La app lee
 `AE3/datos/bike_sharing_preparado.csv`, que el bot de GitHub Actions regenera en `main`.

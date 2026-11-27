@@ -645,7 +645,8 @@ class DashboardBike:
                           "así que no se puede atribuir la diferencia al festivo en sí. ")
             else:
                 resp += (self._sin_comp("festivos", "un solo festivo", fe, "nombre_festivo", okf, masc=True)
-                         + f" Cada festivo tiene {rf}: no se ordenan.")
+                         + f" Cada festivo tiene {rf}: el gráfico los ordena por promedio solo como referencia, "
+                         "y ese orden no se interpreta ni se usa para recomendar.")
             resp += self._nota_pocas(fe, "nombre_festivo", okf, "festivos", masc=True)
             lim_fe += f"Cada festivo tiene {rf}. "
         n_fest, n_lab = self._horas_tipo("Festivo"), self._horas_tipo("Laboral")
