@@ -5,3 +5,12 @@ services:
       - "8888:8888"
     volumes:
       - .:/app
+
+  # App de Streamlit de AE4: docker compose up streamlit  ->  http://localhost:8501
+  streamlit:
+    build: .
+    command: ["streamlit", "run", "AE4/app/app.py", "--server.address", "0.0.0.0"]
+    ports:
+      - "8501:8501"
+    volumes:
+      - .:/app

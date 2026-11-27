@@ -11,6 +11,7 @@ que se reutilizará en las siguientes actividades.
 - [EA1 – Carga y creación del dataset](#ea1--carga-y-creación-del-dataset)
 - [EA2 – Ideación, diseño y documentación de la necesidad](#ea2--ideación-diseño-y-documentación-de-la-necesidad)
 - [AE3 / EA3 – Transformación y enriquecimiento de datos](#ae3--transformación-y-enriquecimiento-de-datos)
+- [AE4 – Métricas y visualización (app de Streamlit)](#ae4--métricas-y-visualización-app-de-streamlit)
 
 ## EA1 – Carga y creación del dataset
 
@@ -308,6 +309,113 @@ Cada ejecución regenera `AE3/datos/`, `AE3/resultados/tablas/` y
 `AE3/resultados/resumen_dataframe_final.txt`, y al final **vuelve a leer cada archivo y
 comprueba** que coincide con lo que hay en memoria (totales y porcentajes incluidos).
 
+## AE4 – Métricas y visualización (app de Streamlit)
+
+**Propósito:** convertir las tablas de la AE3 en métricas y visualizaciones que respondan las
+seis preguntas del análisis (P1 a P6) y publicarlas en una **app web interactiva de
+Streamlit**, con filtros, indicadores y textos de interpretación calculados a partir de los
+datos (ninguna cifra de los textos está escrita a mano).
+
+**Qué se mide:** alquileres (demanda). El dataset no tiene precios ni costos, así que la app no
+habla de ingresos ni de rentabilidad. Todo es descriptivo: asociaciones, no causas.
+
+**Enlace de la app:** (pendiente de despliegue)
+
+### Qué muestra la app
+
+| Pestaña | Contenido |
+|---|---|
+| Contexto | Necesidad, pregunta general, P1 a P6, identificación del dataset (fuente, unidad, horas faltantes), transformaciones y enriquecimiento con el LLM. Describe el dataset completo |
+| P1 a P6 | Una pestaña por pregunta: métrica (fórmula y unidad), indicadores, gráficos (incluye un mapa de calor día de la semana × hora y un ranking de meses), tablas, qué muestran los datos, qué decisión apoya, qué información adicional se necesitaría y limitaciones |
+| Conclusiones | Conclusiones, recomendaciones y limitaciones generales |
+
+Filtros de la barra lateral: año, estación, tipo de día y rango de horas. Con filtros activos la
+app lo avisa y todas las cifras (y la base de cada porcentaje) se refieren a la selección; sin
+filtros coinciden con las tablas de la AE3. P6 compara 2011 con 2012, por eso ignora el filtro de
+año. Las categorías con muy pocas horas observadas (por ejemplo, lluvia fuerte con 3 horas) se
+muestran en gris y no se interpretan.
+
+### Estructura
+
+```
+src/analitica_bike/               # Paquete liviano (pandas, numpy y plotly; sin clases_po)
+├── datos.py                      # Carga del dataset preparado y de las tablas de AE3 (rutas relativas)
+├── metricas.py                   # Una función por tabla de AE3 (P1 a P6); fuente única de las cifras
+└── dashboard_bike.py             # DashboardBike: filtros, figuras Plotly, textos calculados y app
+AE4/
+├── app/
+│   ├── app.py                    # Punto de entrada de Streamlit
+│   └── requirements.txt          # Dependencias de la app (para Streamlit Community Cloud)
+├── notebooks/AE4_metricas_visualizacion.ipynb   # Verifica las 11 tablas y el dashboard contra AE3
+└── resultados/resumen_ae4.txt    # Reporte generado por el notebook (lo sube el bot)
+.streamlit/config.toml            # Tema claro de la app
+```
+
+**Datos que lee la app:** `AE3/datos/bike_sharing_preparado.csv` (el dataset preparado de la
+AE3, con `AE3/resultados/tablas/` como referencia). No se copian datos a `AE4/`.
+
+### Clase `DashboardBike` (`src/analitica_bike/dashboard_bike.py`)
+
+Sigue el patrón de una clase con un método por figura: `desde_csv()` carga el dataset,
+`filtrar(...)` devuelve una instancia nueva con la selección, `kpis()` y `respuestas()` calculan
+indicadores y textos con `metricas.py`, `figura_*()` arma cada gráfico y `render()` compone la app
+(barra lateral, pestañas, `st.metric` y `st.plotly_chart`).
+
+```python
+dash = DashboardBike.desde_csv()
+dash.kpis()
+dash.filtrar(anios=[2012], tipos_dia=["Laboral"]).figura_hora()
+```
+
+### Cómo ejecutar la app
+
+Sin Docker (Python 3.12), desde la raíz del repositorio:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -r AE4/app/requirements.txt
+streamlit run AE4/app/app.py
+```
+
+Con Docker Compose (abrir `http://localhost:8501`):
+
+```bash
+docker compose up --build streamlit
+```
+
+El servicio `notebook` (Jupyter) sigue funcionando igual que antes.
+
+### Cómo ejecutar el notebook de la AE4
+
+```bash
+docker compose build
+docker compose run --rm --user "$(id -u):$(id -g)" -e HOME=/tmp \
+  -w /app/AE4/notebooks notebook \
+  jupyter nbconvert --to notebook --execute --inplace AE4_metricas_visualizacion.ipynb
+```
+
+El notebook vuelve a calcular las 11 tablas y las compara con las de la AE3
+(`assert_frame_equal`), comprueba que `DashboardBike` sin filtros reproduce esas cifras y que
+construye todas sus figuras (también con varios filtros). Regenera `AE4/resultados/resumen_ae4.txt`.
+
+### Dependencias
+
+`streamlit`, `pandas==2.2.3`, `numpy` y `plotly`. Están en `AE4/app/requirements.txt` (solo lo que
+usa la app) y también en el `requirements.txt` de la raíz (que usan Docker y el workflow).
+
+### Despliegue en Streamlit Community Cloud
+
+| Campo | Valor |
+|---|---|
+| Repositorio | `samu975/Proyecto-integrado-III` |
+| Branch | `main` |
+| Main file path | `AE4/app/app.py` |
+| Python | 3.12 |
+
+Streamlit Cloud instala `AE4/app/requirements.txt` (el archivo junto al *main file*). La app lee
+`AE3/datos/bike_sharing_preparado.csv`, que el bot de GitHub Actions regenera en `main`.
+
 ## Cómo ejecutarlo (EA1)
 
 ### Con Docker (recomendado)
@@ -346,11 +454,11 @@ jupyter notebook EA1_fake_news.ipynb
 ## Ejecución automática (GitHub Actions)
 
 El workflow `.github/workflows/ejecutar-notebooks.yaml` corre en cada push a `main`
-y procesa todos los notebooks de la lista `NOTEBOOKS` (hoy EA1, EA2 y AE3):
+y procesa todos los notebooks de la lista `NOTEBOOKS` (hoy EA1, EA2, AE3 y AE4):
 
 1. Instala las dependencias en una máquina limpia.
 2. Borra las carpetas de resultados (`EA1/datos/`, `EA1/resultados/`,
-   `EA2/resultados/`, `AE3/datos/`, `AE3/resultados/`) para regenerarlas desde cero.
+   `EA2/resultados/`, `AE3/datos/`, `AE3/resultados/`, `AE4/resultados/`) para regenerarlas desde cero.
    `AE3/llm/` **no** se borra: guarda la respuesta versionada del LLM.
 3. Ejecuta cada notebook completo desde su carpeta.
 4. Commitea los notebooks con sus salidas y los archivos generados como

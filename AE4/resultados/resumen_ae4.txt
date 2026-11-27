@@ -1,0 +1,4 @@
+Filas: 17379
+Columnas: 23
+Tablas verificadas contra AE3: 11
+Figuras de la app construidas: 21

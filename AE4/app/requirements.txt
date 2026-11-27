@@ -1,0 +1,6 @@
+# Dependencias de la app de AE4 (Streamlit Community Cloud las instala desde esta carpeta).
+# No incluye el resto de requirements.txt: la app no usa Hugging Face, OpenAI ni Jupyter.
+streamlit>=1.50
+pandas==2.2.3
+numpy>=2.0,<3
+plotly>=5.24

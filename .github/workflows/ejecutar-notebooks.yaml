@@ -22,6 +22,7 @@ env:
     EA1|EA1/notebooks/EA1_fake_news.ipynb|EA1/datos EA1/resultados|EA1/resultados/fake-news.txt
     EA2|EA2/notebooks/EA2_bike_sharing.ipynb|EA2/resultados|EA2/resultados/resumen_dataframe.txt
     AE3|AE3/notebooks/AE3_bike_sharing.ipynb|AE3/datos AE3/resultados|AE3/resultados/resumen_dataframe_final.txt
+    AE4|AE4/notebooks/AE4_metricas_visualizacion.ipynb|AE4/resultados|AE4/resultados/resumen_ae4.txt
 
 jobs:
   ejecutar-notebooks:
